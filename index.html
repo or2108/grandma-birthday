@@ -1,156 +1,97 @@
 <!DOCTYPE html>
 <html lang="he">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>יום הולדת שמח סבתא!</title>
-<style>
-  body {
-    margin: 0;
-    overflow: hidden;
-    background-color: pink;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ctext y='50%' x='50%' text-anchor='middle' font-size='24'%3E🎂%3C/text%3E%3Ctext y='25%' x='25%' font-size='20'%3E🎁%3C/text%3E%3Ctext y='75%' x='75%' font-size='20'%3E🎈%3C/text%3E%3C/svg%3E");
-  }
-  .photo {
-    position: absolute;
-    border: 4px solid white;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    transition: transform 0.3s ease;
-  }
-  .photo:hover {
-    transform: scale(1.1) rotate(5deg);
-    z-index: 10;
-  }
-  .center-message {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(255, 255, 255, 0.85);
-    padding: 30px;
-    border-radius: 20px;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    max-width: 80%;
-    animation: glow 2s infinite alternate;
-  }
-  @keyframes glow {
-    0% { box-shadow: 0 0 10px #ff66a3, 0 0 20px #ff99cc, 0 0 30px #ffccff; }
-    100% { box-shadow: 0 0 20px #ff3399, 0 0 40px #ff66cc, 0 0 60px #ff99ff; }
-  }
-  .center-message h1 {
-    font-size: 2.2rem;
-    color: #d6336c;
-    margin: 0 0 15px;
-  }
-  .center-message p {
-    font-size: 1.2rem;
-    color: #444;
-    margin: 5px 0;
-    line-height: 1.5;
-  }
-  .btn {
-    margin-top: 15px;
-    padding: 10px 20px;
-    background: #d6336c;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-  canvas {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-  }
-</style>
+  <meta charset="UTF-8">
+  <title>יום הולדת שמח סבתא 🎉</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #ffe0f0;
+      font-family: Arial, sans-serif;
+      direction: rtl;
+      overflow: hidden;
+    }
+
+    .blessing {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.85);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #ff8ac9;
+      max-width: 90%;
+      text-align: center;
+      font-size: 1.5em;
+      line-height: 1.6;
+    }
+
+    .blessing h1 {
+      margin: 0;
+      font-size: 2em;
+    }
+
+    .image {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 15px;
+      border: 3px solid white;
+      box-shadow: 0 0 10px #ff69b4;
+      transition: transform 0.3s ease;
+    }
+
+    .image:hover {
+      transform: scale(1.1);
+      z-index: 2;
+    }
+
+    .emoji-bg {
+      position: absolute;
+      font-size: 2em;
+      opacity: 0.15;
+      animation: float 10s infinite linear;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-100vh); }
+    }
+  </style>
 </head>
 <body>
 
-<canvas id="confetti"></canvas>
+  <div class="blessing">
+    <h1>💖 סבתא אהובה שלי 💖</h1>
+    <p>
+      🎂 מאחל לך המון בריאות, אושר ושמחה 🎉<br>
+      💐 ימים קסומים ורגועים עם כל המשפחה 💞<br>
+      🌸 שכל חלום שתרצי יתגשם ✨<br>
+      💝 אני אוהב אותך עד אין קץ 💝
+    </p>
+  </div>
 
-<div class="center-message">
-  <h1>🎉💖 סבתא אהובה שלי 💖🎉</h1>
-  <p>🌸 מאחל לך ים של בריאות 🌸</p>
-  <p>🌞 ימים מלאים באושר ושמחה 🌞</p>
-  <p>💐 חיבוקים חמים מכל המשפחה 💐</p>
-  <p>🎂 שכל חלום שתרצי – יתגשם 🎂</p>
-  <p>💝 אוהב אותך עד השמיים ובחזרה 💝</p>
-  <button class="btn" id="celebrateBtn">חגיגה 🎉</button>
-</div>
+  <!-- רקע עם אימוג'ים -->
+  <div class="emoji-bg" style="top: 10%; left: 20%;">🎉</div>
+  <div class="emoji-bg" style="top: 50%; left: 70%;">🎈</div>
+  <div class="emoji-bg" style="top: 80%; left: 10%;">🎁</div>
+  <div class="emoji-bg" style="top: 30%; left: 60%;">🎂</div>
+  <div class="emoji-bg" style="top: 60%; left: 30%;">🌸</div>
 
-<script>
-const totalPhotos = 25;
-for (let i = 1; i <= totalPhotos; i++) {
-  const img = document.createElement('img');
-  img.src = `grandma${i}.jpg`;
-  img.alt = `סבתא ${i}`;
-  img.className = 'photo';
-  img.style.width = `${Math.random() * 100 + 80}px`; // 80-180px
-  img.style.top = `${Math.random() * 90}vh`;
-  img.style.left = `${Math.random() * 90}vw`;
-  document.body.appendChild(img);
-}
-
-// Confetti effect
-const canvas = document.getElementById('confetti');
-const ctx = canvas.getContext('2d');
-let W = canvas.width = window.innerWidth;
-let H = canvas.height = window.innerHeight;
-window.addEventListener('resize', () => {
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-});
-
-function random(min,max){return Math.random()*(max-min)+min;}
-class ConfettiPiece {
-  constructor(){
-    this.x = random(0,W);
-    this.y = random(-H,0);
-    this.w = random(6,12);
-    this.h = random(8,18);
-    this.vx = random(-1,1);
-    this.vy = random(2,6);
-    this.rotation = random(0,360);
-    this.spin = random(-8,8);
-    this.color = `hsl(${Math.floor(random(0,360))}deg 80% 60%)`;
-  }
-  update(){
-    this.x += this.vx;
-    this.y += this.vy;
-    this.rotation += this.spin;
-    if(this.y > H + 40) {
-      this.y = random(-200, -20);
-      this.x = random(0,W);
+  <!-- תמונות מסביב -->
+  <script>
+    const imageCount = 20;
+    for (let i = 1; i <= imageCount; i++) {
+      const img = document.createElement("img");
+      img.src = `images/img${i}.jpg`;
+      img.className = "image";
+      img.style.top = Math.random() * 90 + "%";
+      img.style.left = Math.random() * 90 + "%";
+      document.body.appendChild(img);
     }
-  }
-  draw(){
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    ctx.rotate(this.rotation * Math.PI/180);
-    ctx.fillStyle = this.color;
-    ctx.fillRect(-this.w/2, -this.h/2, this.w, this.h);
-    ctx.restore();
-  }
-}
-let confettiPieces = [];
-function makeConfetti(n=120){
-  confettiPieces = [];
-  for(let i=0;i<n;i++) confettiPieces.push(new ConfettiPiece());
-}
-function animateConfetti(){
-  ctx.clearRect(0,0,W,H);
-  for(const p of confettiPieces){ p.update(); p.draw(); }
-  requestAnimationFrame(animateConfetti);
-}
-document.getElementById('celebrateBtn').addEventListener('click', ()=>{
-  makeConfetti(150);
-  animateConfetti();
-  setTimeout(()=>{ confettiPieces = []; }, 7000);
-});
-</script>
+  </script>
 
 </body>
 </html>
