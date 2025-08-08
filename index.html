@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="he">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>יום הולדת שמח סבתוש 💖</title>
   <style>
     body {
@@ -40,8 +40,8 @@
 
     .image {
       position: absolute;
-      width: 160px;  /* ← מוגדל */
-      height: 160px; /* ← מוגדל */
+      width: 160px;
+      height: 160px;
       object-fit: cover;
       border-radius: 15px;
       border: 3px solid white;
@@ -65,19 +65,22 @@
     }
 
     @keyframes floatUp {
-      0% { transform: translateY(100vh); }
-      100% { transform: translateY(-100vh); }
+      0% {
+        transform: translateY(100vh);
+      }
+      100% {
+        transform: translateY(-100vh);
+      }
     }
   </style>
 </head>
 <body>
-
   <div class="blessing">
     <h1>🎉 סבתא אהובה שלי 🎉</h1>
     <p>
-      💖 מאחל לך יום הולדת שמח במיוחד!<br>
-      🎂 הרבה בריאות, צחוק, אהבה ושקט פנימי<br>
-      💐 שהלב שלך תמיד יהיה שמח – כי את מדהימה!<br>
+      💖 מאחל לך יום הולדת שמח במיוחד!<br />
+      🎂 הרבה בריאות, צחוק, אהבה ושקט פנימי<br />
+      💐 שהלב שלך תמיד יהיה שמח – כי את מדהימה!<br />
       🫶 אני אוהב אותך בלי סוף ופה תמיד בשבילך 💝
     </p>
   </div>
@@ -85,15 +88,46 @@
   <!-- תמונות -->
   <script>
     const imageCount = 25;
+    const images = [];
+    const imageSize = 160; // px
+
+    function isOverlap(x1, y1, x2, y2, size) {
+      return !(
+        x1 + size < x2 ||
+        x2 + size < x1 ||
+        y1 + size < y2 ||
+        y2 + size < y1
+      );
+    }
 
     for (let i = 1; i <= imageCount; i++) {
       const img = new Image();
       img.src = `grandma${i}.jpg`;
+      img.className = "image";
 
       img.onload = function () {
-        img.className = "image";
-        img.style.top = Math.random() * 85 + "%";  // פחות סיכוי שיתנגש עם הברכה
-        img.style.left = Math.random() * 85 + "%";
+        let posX, posY;
+        let attempts = 0;
+        const maxAttempts = 100;
+
+        do {
+          posX = Math.random() * (window.innerWidth - imageSize);
+          posY = Math.random() * (window.innerHeight - imageSize);
+          attempts++;
+
+          // בדיקה אם מתנגש עם תמונה קיימת
+          const collision = images.some(({ x, y }) =>
+            isOverlap(x, y, posX, posY, imageSize)
+          );
+
+          // אם לא מתנגש, יוצא מהלולאה
+          if (!collision) break;
+        } while (attempts < maxAttempts);
+
+        img.style.left = posX + "px";
+        img.style.top = posY + "px";
+
+        images.push({ x: posX, y: posY });
         document.body.appendChild(img);
       };
 
@@ -105,18 +139,17 @@
 
   <!-- אימוג'ים -->
   <script>
-    const emojis = ['🎈', '🎉', '🎂', '🎁', '💐', '🥳', '🍰', '🍬', '🍾', '💝'];
+    const emojis = ["🎈", "🎉", "🎂", "🎁", "💐", "🥳", "🍰", "🍬", "🍾", "💝"];
     for (let i = 0; i < 25; i++) {
       const em = document.createElement("div");
       em.className = "emoji";
       em.textContent = emojis[Math.floor(Math.random() * emojis.length)];
       em.style.top = Math.random() * 100 + "vh";
       em.style.left = Math.random() * 100 + "vw";
-      em.style.fontSize = (1.8 + Math.random() * 1.5) + "em";
-      em.style.animationDuration = (10 + Math.random() * 10) + "s";
+      em.style.fontSize = 1.8 + Math.random() * 1.5 + "em";
+      em.style.animationDuration = 10 + Math.random() * 10 + "s";
       document.body.appendChild(em);
     }
   </script>
-
 </body>
 </html>
