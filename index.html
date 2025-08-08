@@ -91,6 +91,7 @@
     const images = [];
     const imageSize = 160; // px
 
+    // פונקציה לבדיקת התנגשות בין שני ריבועים
     function isOverlap(x1, y1, x2, y2, size) {
       return !(
         x1 + size < x2 ||
@@ -100,41 +101,59 @@
       );
     }
 
-    for (let i = 1; i <= imageCount; i++) {
-      const img = new Image();
-      img.src = `grandma${i}.jpg`;
-      img.className = "image";
+    window.onload = () => {
+      const blessing = document.querySelector(".blessing");
+      const blessingRect = blessing.getBoundingClientRect();
 
-      img.onload = function () {
-        let posX, posY;
-        let attempts = 0;
-        const maxAttempts = 100;
+      for (let i = 1; i <= imageCount; i++) {
+        const img = new Image();
+        img.src = `grandma${i}.jpg`;
+        img.className = "image";
 
-        do {
-          posX = Math.random() * (window.innerWidth - imageSize);
-          posY = Math.random() * (window.innerHeight - imageSize);
-          attempts++;
+        img.onload = function () {
+          let posX, posY;
+          let attempts = 0;
+          const maxAttempts = 200;
 
-          // בדיקה אם מתנגש עם תמונה קיימת
-          const collision = images.some(({ x, y }) =>
-            isOverlap(x, y, posX, posY, imageSize)
-          );
+          do {
+            posX = Math.random() * (window.innerWidth - imageSize);
+            posY = Math.random() * (window.innerHeight - imageSize);
+            attempts++;
 
-          // אם לא מתנגש, יוצא מהלולאה
-          if (!collision) break;
-        } while (attempts < maxAttempts);
+            const collisionWithImages = images.some(({ x, y }) =>
+              isOverlap(x, y, posX, posY, imageSize)
+            );
 
-        img.style.left = posX + "px";
-        img.style.top = posY + "px";
+            const collisionWithBlessing = isOverlap(
+              blessingRect.left,
+              blessingRect.top,
+              posX,
+              posY,
+              Math.max(imageSize, blessingRect.width)
+            ) && isOverlap(
+              blessingRect.left,
+              blessingRect.top,
+              posX,
+              posY,
+              Math.max(imageSize, blessingRect.height)
+            );
 
-        images.push({ x: posX, y: posY });
-        document.body.appendChild(img);
-      };
+            // מפסיקים אם אין התנגשות עם תמונות ועם הברכה
+            if (!collisionWithImages && !collisionWithBlessing) break;
+          } while (attempts < maxAttempts);
 
-      img.onerror = function () {
-        console.log(`תמונה לא נטענה: grandma${i}.jpg`);
-      };
-    }
+          img.style.left = posX + "px";
+          img.style.top = posY + "px";
+
+          images.push({ x: posX, y: posY });
+          document.body.appendChild(img);
+        };
+
+        img.onerror = function () {
+          console.log(`תמונה לא נטענה: grandma${i}.jpg`);
+        };
+      }
+    };
   </script>
 
   <!-- אימוג'ים -->
