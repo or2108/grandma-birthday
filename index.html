@@ -23,7 +23,7 @@
       box-shadow: 0 0 30px #ff99cc;
       max-width: 85%;
       text-align: center;
-      z-index: 1;
+      z-index: 2;
     }
 
     .blessing h1 {
@@ -47,23 +47,25 @@
       border: 3px solid white;
       box-shadow: 0 0 15px #ff69b4;
       transition: transform 0.3s ease;
-      z-index: 0;
+      z-index: 1;
     }
 
     .image:hover {
       transform: scale(1.15);
-      z-index: 2;
+      z-index: 3;
     }
 
     .emoji {
       position: absolute;
-      font-size: 2em;
-      opacity: 0.15;
-      animation: float 10s infinite linear;
+      font-size: 2.2em;
+      opacity: 0.25;
+      animation: floatUp 15s infinite linear;
+      pointer-events: none;
+      z-index: 0;
     }
 
-    @keyframes float {
-      0% { transform: translateY(0); }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh); }
       100% { transform: translateY(-100vh); }
     }
   </style>
@@ -80,14 +82,7 @@
     </p>
   </div>
 
-  <!-- אימוג'ים ברקע -->
-  <div class="emoji" style="top: 10%; left: 20%;">🎈</div>
-  <div class="emoji" style="top: 50%; left: 75%;">🎉</div>
-  <div class="emoji" style="top: 30%; left: 10%;">🎂</div>
-  <div class="emoji" style="top: 80%; left: 60%;">🎁</div>
-  <div class="emoji" style="top: 70%; left: 30%;">💐</div>
-
-  <!-- תמונות מסביב -->
+  <!-- תמונות -->
   <script>
     const imageCount = 25;
     for (let i = 1; i <= imageCount; i++) {
@@ -97,6 +92,21 @@
       img.style.top = Math.random() * 90 + "%";
       img.style.left = Math.random() * 90 + "%";
       document.body.appendChild(img);
+    }
+  </script>
+
+  <!-- אימוג'ים -->
+  <script>
+    const emojis = ['🎈', '🎉', '🎂', '🎁', '💐', '🥳', '🍰', '🍬', '🍾', '💝'];
+    for (let i = 0; i < 25; i++) {
+      const em = document.createElement("div");
+      em.className = "emoji";
+      em.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      em.style.top = Math.random() * 100 + "vh";
+      em.style.left = Math.random() * 100 + "vw";
+      em.style.fontSize = (1.8 + Math.random() * 1.5) + "em";
+      em.style.animationDuration = (10 + Math.random() * 10) + "s";
+      document.body.appendChild(em);
     }
   </script>
 
