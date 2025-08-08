@@ -40,12 +40,12 @@
 
     .image {
       position: absolute;
-      width: 160px;
-      height: 160px;
+      width: 220px;
+      height: 220px;
       object-fit: cover;
-      border-radius: 15px;
-      border: 3px solid white;
-      box-shadow: 0 0 15px #ff69b4;
+      border-radius: 50%;
+      border: 4px solid white;
+      box-shadow: 0 0 20px #ff69b4;
       transition: transform 0.3s ease;
       z-index: 1;
     }
@@ -85,73 +85,36 @@
     </p>
   </div>
 
-  <!-- תמונות -->
+  <!-- תמונות במעגל -->
   <script>
-    const imageCount = 25;
-    const images = [];
-    const imageSize = 160; // px
-
-    // פונקציה לבדיקת התנגשות בין שני ריבועים
-    function isOverlap(x1, y1, x2, y2, size) {
-      return !(
-        x1 + size < x2 ||
-        x2 + size < x1 ||
-        y1 + size < y2 ||
-        y2 + size < y1
-      );
-    }
+    const imageCount = 16; // שים לב: 16 תמונות = עיגול מושלם
+    const imageSize = 220; // גודל התמונה (רוחב וגובה)
+    const radius = 350;    // רדיוס המעגל
 
     window.onload = () => {
       const blessing = document.querySelector(".blessing");
       const blessingRect = blessing.getBoundingClientRect();
 
-      for (let i = 1; i <= imageCount; i++) {
+      const centerX = blessingRect.left + blessingRect.width / 2;
+      const centerY = blessingRect.top + blessingRect.height / 2;
+
+      for (let i = 0; i < imageCount; i++) {
+        const angle = (2 * Math.PI / imageCount) * i;
         const img = new Image();
-        img.src = `grandma${i}.jpg`;
+        img.src = `grandma${i + 1}.jpg`;
         img.className = "image";
 
-        img.onload = function () {
-          let posX, posY;
-          let attempts = 0;
-          const maxAttempts = 200;
+        const x = centerX + radius * Math.cos(angle) - imageSize / 2;
+        const y = centerY + radius * Math.sin(angle) - imageSize / 2;
 
-          do {
-            posX = Math.random() * (window.innerWidth - imageSize);
-            posY = Math.random() * (window.innerHeight - imageSize);
-            attempts++;
+        img.style.left = `${x}px`;
+        img.style.top = `${y}px`;
 
-            const collisionWithImages = images.some(({ x, y }) =>
-              isOverlap(x, y, posX, posY, imageSize)
-            );
-
-            const collisionWithBlessing = isOverlap(
-              blessingRect.left,
-              blessingRect.top,
-              posX,
-              posY,
-              Math.max(imageSize, blessingRect.width)
-            ) && isOverlap(
-              blessingRect.left,
-              blessingRect.top,
-              posX,
-              posY,
-              Math.max(imageSize, blessingRect.height)
-            );
-
-            // מפסיקים אם אין התנגשות עם תמונות ועם הברכה
-            if (!collisionWithImages && !collisionWithBlessing) break;
-          } while (attempts < maxAttempts);
-
-          img.style.left = posX + "px";
-          img.style.top = posY + "px";
-
-          images.push({ x: posX, y: posY });
-          document.body.appendChild(img);
+        img.onerror = () => {
+          console.log(`תמונה לא נטענה: grandma${i + 1}.jpg`);
         };
 
-        img.onerror = function () {
-          console.log(`תמונה לא נטענה: grandma${i}.jpg`);
-        };
+        document.body.appendChild(img);
       }
     };
   </script>
